@@ -28,12 +28,12 @@ genetic_drift <- function(N, initial.freq=0.5){
         x = sample(x, replace=T)
         # calculate frequency
         freq_1 = sum(x == 1)/N
+        # increase to next generation
+        i = i+1
         # make a data frame
         df = rbind(df, make_df_gen(N, x, i, freq_1))
         # plot population
         #plot_population(df, circle)
-        # increase to next generation
-        i = i+1
         # stop if allele goes to fixation
         if (freq_1 == 1){
             break
