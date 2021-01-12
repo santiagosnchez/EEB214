@@ -49,3 +49,41 @@ make_df_gen <- function(N, x, i, freq){
     df = data.frame(x=rnorm(N), y=rnorm(N), allele=c("A","a")[ factor(x) ], generation=i, frequency=freq)
     return(df)
 }
+
+# function to plot a population on a petri dish
+plot_population <- function(df, gen, N){
+    circle = circleFun(center=c(0,0), diameter=10, npoints=100)
+    df = subset(df, generation == gen)
+    df$allele = factor(df$allele, c("a","A"))
+    p = ggplot(df, aes(x, y)) + 
+        geom_point(aes(color=allele), size=7, alpha=0.7) + 
+        geom_path(data=circle, color="black", size=3) + 
+        scale_color_brewer(type="qual", palette=1, name="allele", drop=FALSE) + 
+        theme_minimal() +
+      #  scale_x_continuous( expand=c(0,.1)) +
+        theme(axis.title=element_blank(), axis.text=element_blank()) +
+        theme(title=element_text(size=16), legend.title=element_text(size=16), legend.text=element_text(size=14)) +
+        labs(title=paste("Population size:",N,", Generation:",gen))
+    return(p)
+}
+
+# function to plot the frequency of an allele
+plot_frequency <- function(df, N){
+    df = unique(df[,3:5])
+    last_generation = df[nrow(df),"generation"]
+    if (df[nrow(df),"frequency"] == 0){
+        col = "red"
+    } else {
+        col = "green"
+    } 
+    p = ggplot(data=df, aes(x=generation, frequency)) +
+        geom_point(color=col, size=5) +
+        geom_line(color=col, size=1) +
+        geom_hline(yintercept=c(0,0.5,1), linetype=2, size=0.5) +
+        geom_vline(xintercept=last_generation, size=1.5, color=col, linetype=2) +
+        annotate(geom="label", label=last_generation, x=last_generation, y=0.5, size=7, hjust=1) +
+        ylim(0,1) +
+        labs(title=paste("Population size:",N)) +
+        theme(text=element_text(size=20))
+    return(p)
+}
