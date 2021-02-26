@@ -46,7 +46,7 @@ genetic_drift <- function(N, initial.freq=0.5){
 # random xy coordinates drawn from a normal
 # distribution
 make_df_gen <- function(N, x, i, freq){
-    df = data.frame(x=rnorm(N), y=rnorm(N), allele=c("A","a")[ factor(x) ], generation=i, frequency=freq)
+    df = data.frame(x=rnorm(N), y=rnorm(N), allele=c("A","a")[ factor(x, levels=c(0,1)) ], generation=i, frequency=freq)
     return(df)
 }
 
